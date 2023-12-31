@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  # Django API service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_DB_HOST: db
+      DJANGO_DB_PORT: 5432
+      DJANGO_DB_NAME: default_db
+      DJANGO_DB_USER: root
+      DJANGO_DB_PASSWORD: very_secret
+      DJANGO_SECRET_KEY: "django-insecure-os8gpg^!u&ns7x3e9u0re3v4^&_p0e#vq@i0k3moqbp@6&0tas"
+      DJANGO_DEBUG: "True"
+
+  # PostgreSQL database
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: default_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: very_secret
+
+volumes:
+  postgres_data:
